@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phonebook-deployment
+  labels:
+    app: phonebook
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: phonebook
+  template:
+    metadata:
+      labels:
+        app: phonebook
+    spec:
+      containers:
+      - name: phonebook-container
+        image: ilyassifez/kube_app:latest
+        command: ["python", "server.py"] 
+        ports:
+        - containerPort: 8181

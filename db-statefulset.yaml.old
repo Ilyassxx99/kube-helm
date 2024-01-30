@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db-statefulset
+spec:
+  selector:
+    matchLabels:
+      app: db 
+  serviceName: db-service
+  replicas: 2 
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: db-container
+        image: ilyassifez/kube_db:latest
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: db-storage
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: db-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: db-stateful-class
+      resources:
+        requests:
+          storage: 2Gi
